@@ -15,22 +15,25 @@
     <description>Demo project for Spring Boot</description>
     <properties>
         <java.version>1.8</java.version>
-        <spring-native.version>0.9.1</spring-native.version>
     </properties>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
+        <!--
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
+        -->
+        <!--
         <dependency>
             <groupId>org.springframework.experimental</groupId>
             <artifactId>spring-native</artifactId>
             <version>${spring-native.version}</version>
         </dependency>
+        -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -77,6 +80,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <!--
                 <configuration>
                     <image>
                         <builder>paketobuildpacks/builder:tiny</builder>
@@ -85,26 +89,9 @@
                         </env>
                     </image>
                 </configuration>
+                -->
             </plugin>
-            <plugin>
-                <groupId>org.springframework.experimental</groupId>
-                <artifactId>spring-aot-maven-plugin</artifactId>
-                <version>${spring-native.version}</version>
-                <executions>
-                    <execution>
-                        <id>test-generate</id>
-                        <goals>
-                            <goal>test-generate</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>generate</id>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+            <!--
             <plugin>
                 <groupId>org.hibernate.orm.tooling</groupId>
                 <artifactId>hibernate-enhance-maven-plugin</artifactId>
@@ -125,8 +112,10 @@
                     </execution>
                 </executions>
             </plugin>
+            -->
         </plugins>
     </build>
+    <!--
     <repositories>
         <repository>
             <id>spring-releases</id>
@@ -141,5 +130,6 @@
             <url>https://repo.spring.io/release</url>
         </pluginRepository>
     </pluginRepositories>
+    -->
 
 </project>
