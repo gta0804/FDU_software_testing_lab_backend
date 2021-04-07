@@ -5,15 +5,20 @@ import com.softwaretest.demo.Controller.RemoteResponse.LoginSuccessResponse;
 import com.softwaretest.demo.Controller.Request.CheckIdentityRequest;
 import com.softwaretest.demo.Controller.Request.LoginRequest;
 import com.softwaretest.demo.Controller.Request.LogoutRequest;
+import com.softwaretest.demo.Controller.Response.AccountDetailsResponse;
+import com.softwaretest.demo.Controller.Response.AccountResponse;
 import com.softwaretest.demo.Service.LoanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -27,21 +32,31 @@ public class LoanController {
 
 
     /*
-    @Description : 前端发来身份验证的请求
+    @Description : 在查看账号之前需要先验证身份
      */
-    @RequestMapping("/check")
-    public ResponseEntity<HashMap<String,Object>>  checkIdentity(@RequestBody CheckIdentityRequest request){
+    @GetMapping("/account/check")
+    public ResponseEntity<HashMap<String,Object>>  checkIdentity(@RequestParam String idNumber) {
         HashMap<String,Object> responseMap = new HashMap<>();
 
         //向服务器发送请求的封装map
-        Map<String,Object> requestMap = new HashMap<>();
-        requestMap.put("IDNumber",request.getIDNumber());
-        requestMap.put("login-token",request.getToken());
-        CheckIdentityResponse response = restTemplate.getForObject("http://10.176.122.174:8080/account/check",CheckIdentityResponse.class,requestMap);
-        responseMap.put("code",response.getCode());
-        responseMap.put("success",response.isFlag());
-        responseMap.put("token",request.getToken());
+        List<AccountResponse> responses = loanService.getAccounts(idNumber);
+        if(responses == null){
+            responseMap.put("success",false);
+        }
+        else{
+            responseMap.put("success",true);
+            responseMap.put("accounts",responses);
+        }
         return ResponseEntity.ok(responseMap);
+    }
+
+    @GetMapping("/account/loan/details")
+    public ResponseEntity<HashMap<String,Object>> getLoanDetails(@RequestParam Long accountId){
+        HashMap<String,Object> map = new HashMap<>();
+        List<AccountDetailsResponse> responses = loanService.getLoans(accountId);
+        map.put("loans",responses);
+        map.put("success",true);
+        return ResponseEntity.ok(map);
     }
 
     /*
