@@ -24,7 +24,7 @@ public class Installment {
     private Timestamp deadline;
 
     //已经缴纳的罚金，避免出现多次缴纳罚金的情况
-    private Double fineHasPaid;
+    private Boolean  fineHasPaid;
 
     public Installment(){
 
@@ -34,7 +34,7 @@ public class Installment {
         this.amount = amount;
         this.amountRemained = amountRemained;
         this.deadline = deadline;
-        this.fineHasPaid = 0.00;
+        this.fineHasPaid = false;
     }
 
     public Double getAmount() {
@@ -61,11 +61,11 @@ public class Installment {
         this.deadline = deadline;
     }
 
-    public Double getFineHasPaid() {
+    public Boolean getFineHasPaid() {
         return fineHasPaid;
     }
 
-    public void setFineHasPaid(Double fineHasPaid) {
+    public void setFineHasPaid(Boolean fineHasPaid) {
         this.fineHasPaid = fineHasPaid;
     }
 }

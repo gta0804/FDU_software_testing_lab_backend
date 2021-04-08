@@ -37,7 +37,7 @@ public class LoanServiceTest {
         Account account = new Account();
         account.setIdNumber("123456");
         account.setType("储蓄");
-        account.setBalance(100000);
+        account.setBalance(100000.00);
         account.setCustomerName("郭泰安");
         accountRepository.save(account);
     }

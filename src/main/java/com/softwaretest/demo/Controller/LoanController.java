@@ -3,6 +3,7 @@ package com.softwaretest.demo.Controller;
 import com.softwaretest.demo.Controller.RemoteResponse.CheckIdentityResponse;
 import com.softwaretest.demo.Controller.RemoteResponse.LoginSuccessResponse;
 import com.softwaretest.demo.Controller.Request.CheckIdentityRequest;
+import com.softwaretest.demo.Controller.Request.FinePaymentRequest;
 import com.softwaretest.demo.Controller.Request.LoginRequest;
 import com.softwaretest.demo.Controller.Request.LogoutRequest;
 import com.softwaretest.demo.Controller.Response.AccountDetailsResponse;
@@ -11,10 +12,7 @@ import com.softwaretest.demo.Service.LoanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
@@ -56,6 +54,18 @@ public class LoanController {
         List<AccountDetailsResponse> responses = loanService.getLoans(accountId);
         map.put("loans",responses);
         map.put("success",true);
+        return ResponseEntity.ok(map);
+    }
+
+    /*
+    @Description : 缴纳罚金，罚金缴纳具有原子性，只能全部缴纳或者余额不足退出
+     */
+
+    @PostMapping("/account/loan/fine/payment")
+    public ResponseEntity<HashMap<String,Object>>  payFine(@RequestParam FinePaymentRequest request){
+        HashMap<String,Object> map = new HashMap<>();
+        boolean result = loanService.payFine(request.getLoanId(),request.getAmount());
+        map.put("success",result);
         return ResponseEntity.ok(map);
     }
 

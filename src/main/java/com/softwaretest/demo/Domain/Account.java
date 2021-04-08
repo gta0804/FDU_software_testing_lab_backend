@@ -18,14 +18,14 @@ public class Account {
 
     private String type;
 
-    private Integer balance;
+    private Double balance;
 
 
     public Account(){
 
     }
 
-    public Account(String idNumber,String customerName,String type, Integer balance){
+    public Account(String idNumber,String customerName,String type, Double balance){
         this.idNumber = idNumber;
         this.customerName = customerName;
         this.type = type;
@@ -44,11 +44,11 @@ public class Account {
         this.customerName = customerName;
     }
 
-    public Integer getBalance() {
+    public Double getBalance() {
         return balance;
     }
 
-    public void setBalance(Integer balance) {
+    public void setBalance(Double balance) {
         this.balance = balance;
     }
 

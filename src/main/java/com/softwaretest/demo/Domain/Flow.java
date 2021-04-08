@@ -17,7 +17,7 @@ public class Flow {
     private Long id;
 
 
-    //流水类型，分为贷款发放，贷款还款，理财产品流水
+    //流水类型，分为贷款发放，贷款还款，理财产品流水,罚金缴纳
     private String type;
 
 

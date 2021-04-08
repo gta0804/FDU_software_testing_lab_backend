@@ -4,11 +4,11 @@ public class AccountResponse {
     private Long accountId;
     private String customerName;
 
-    private Integer balance;
+    private Double balance;
     private String type;
 
 
-    public AccountResponse(Long accountId,String customerName,Integer balance,String type){
+    public AccountResponse(Long accountId,String customerName,Double balance,String type){
         this.accountId = accountId;
         this.customerName = customerName;
         this.balance = balance;
@@ -23,7 +23,7 @@ public class AccountResponse {
         return type;
     }
 
-    public Integer getBalance() {
+    public Double getBalance() {
         return balance;
     }
 
