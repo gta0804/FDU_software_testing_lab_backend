@@ -55,9 +55,9 @@ public class LoanServiceTest {
         loan.setInterestRate(0.05);
         loan.setStartDate(castStringToTimeStamp("2021-02-28 00:00:00"));
 
-        Installment installment1 = new Installment(4000.00,4000.00,castStringToTimeStamp("2021-03-28 00:00:00"));
-        Installment installment2 = new Installment(4000.00,4000.00,castStringToTimeStamp("2021-03-28 00:00:00"));
-        Installment installment3 = new Installment(4000.00,4000.00,castStringToTimeStamp("2021-04-28 00:00:00"));
+        Installment installment1 = new Installment(4200.00,4200.00,castStringToTimeStamp("2021-03-28 00:00:00"));
+        Installment installment2 = new Installment(4200.00,4200.00,castStringToTimeStamp("2021-03-28 00:00:00"));
+        Installment installment3 = new Installment(4200.00,4200.00,castStringToTimeStamp("2021-04-28 00:00:00"));
         List<Installment> installments = new LinkedList<>();
         installments.add(installment1); installments.add(installment2); installments.add(installment3);
         installmentRepository.saveAll(installments);
