@@ -66,13 +66,10 @@ public class LoanService {
         for(Loan loan:loans){
             double fine = getFine(loan);
             List<InstallmentResponse> installmentResponses = new LinkedList<>();
-            boolean isAllPaid = true;
-            for(Installment installment:loan.getInstallments()){
-                if(!isPaid(installment)){
-                    isAllPaid = false;
-                }
-                if(!isAllPaid){
-                    InstallmentResponse installmentResponse = new InstallmentResponse(installment.getAmount(),installment.getAmountRemained(),installment.getDeadline());
+            List<Installment> installments = loan.getInstallments();
+            for(int i = 0;i<installments.size();i++){
+                if(!isPaid(installments.get(i))){
+                    InstallmentResponse installmentResponse = new InstallmentResponse(installments.get(i).getAmount(),installments.get(i).getAmountRemained(),installments.get(i).getDeadline(),i);
                     installmentResponses.add(installmentResponse);
                 }
             }
