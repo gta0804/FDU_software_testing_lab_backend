@@ -113,7 +113,7 @@ public class LoanService {
     @Description : 获取罚金
      */
 
-    private double getFine(Loan loan){
+    public double getFine(Loan loan){
         double result = 0;
         List<Installment> installments = loan.getInstallments();
         for(Installment installment: installments){
@@ -128,12 +128,12 @@ public class LoanService {
     @Description : 判断该贷款的某个分期是否过期
      */
 
-    private boolean isPaid(Installment installment){
+    public boolean isPaid(Installment installment){
         return installment.getAmountRemained() <0.01;
     }
 
 
-    private boolean isExpired(Installment installment){
+    public boolean isExpired(Installment installment){
         Timestamp currentTime = new Timestamp(System.currentTimeMillis());
         Timestamp expiredTime = installment.getDeadline();
         return expiredTime.before(currentTime)&&!isPaid(installment);
