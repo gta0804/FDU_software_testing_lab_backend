@@ -54,8 +54,6 @@ public class LoanService {
     /*
     @Description :获取账号有关的贷款情况
      */
-
-
     public List<AccountDetailsResponse> getLoans(Long accountId){
         List<Loan> loans = loanRepository.findByAccountId(accountId);
         if(loans == null){
@@ -122,6 +120,38 @@ public class LoanService {
             }
         }
         return result;
+    }
+
+
+    public String repay(Long accountId,Long loanId,Integer index,Double amount){
+        Account account = accountRepository.findById(accountId).orElse(null);
+        if(account == null){
+            return "付款账号不存在";
+        }
+        Loan loan = loanRepository.findById(loanId).orElse(null);
+        if(loan == null){
+            return "贷款不存在";
+        }
+        double balance = account.getBalance();
+        if(balance<amount){
+            return "余额不足";
+        }
+        List<Installment> installments = loan.getInstallments();
+        if(index>=installments.size()||index<0){
+            return "分期索引非法";
+        }
+        Installment installment = installments.get(index);
+        double amountPaid = Math.min(amount,installment.getAmountRemained());
+        double remainAmount = Double.parseDouble(String.format("%.2f",installment.getAmountRemained()-amountPaid));
+        double remainBalance = Double.parseDouble(String.format("%.2f",account.getBalance()-amountPaid));
+        installment.setAmountRemained(remainAmount);
+        account.setBalance(remainBalance);
+
+        Flow flow = new Flow("贷款还款",accountId,amountPaid,new Timestamp(System.currentTimeMillis()));
+        installmentRepository.save(installment);
+        accountRepository.save(account);
+        flowRepository.save(flow);
+        return "success";
     }
 
     /*

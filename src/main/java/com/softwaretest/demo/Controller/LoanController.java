@@ -2,10 +2,7 @@ package com.softwaretest.demo.Controller;
 
 import com.softwaretest.demo.Controller.RemoteResponse.CheckIdentityResponse;
 import com.softwaretest.demo.Controller.RemoteResponse.LoginSuccessResponse;
-import com.softwaretest.demo.Controller.Request.CheckIdentityRequest;
-import com.softwaretest.demo.Controller.Request.FinePaymentRequest;
-import com.softwaretest.demo.Controller.Request.LoginRequest;
-import com.softwaretest.demo.Controller.Request.LogoutRequest;
+import com.softwaretest.demo.Controller.Request.*;
 import com.softwaretest.demo.Controller.Response.AccountDetailsResponse;
 import com.softwaretest.demo.Controller.Response.AccountResponse;
 import com.softwaretest.demo.Service.LoanService;
@@ -36,7 +33,6 @@ public class LoanController {
     public ResponseEntity<HashMap<String,Object>>  checkIdentity(@RequestParam String idNumber) {
         HashMap<String,Object> responseMap = new HashMap<>();
 
-        //向服务器发送请求的封装map
         List<AccountResponse> responses = loanService.getAccounts(idNumber);
         if(responses == null){
             responseMap.put("success",false);
@@ -66,6 +62,21 @@ public class LoanController {
         HashMap<String,Object> map = new HashMap<>();
         boolean result = loanService.payFine(request.getLoanId(),request.getAmount());
         map.put("success",result);
+        return ResponseEntity.ok(map);
+    }
+
+    @PostMapping("/account/loan/payment/repayment")
+    public ResponseEntity<HashMap<String,Object>> loanRepay(@RequestBody LoanRepaymentRequest request){
+        HashMap<String,Object> map = new HashMap<>();
+        String message = loanService.repay(request.getAccountId(),request.getLoanId(),request.getIndex(),request.getAmount());
+        if("success".equals(message)){
+            map.put("success",true);
+            map.put("message","success");
+        }
+        else{
+            map.put("success",false);
+            map.put("message",message);
+        }
         return ResponseEntity.ok(map);
     }
 
@@ -100,9 +111,7 @@ public class LoanController {
         responseMap.put("code",logoutResponse.getStatusCodeValue());
         return ResponseEntity.ok(responseMap);
     }
-
-
-
+    
     /*
     @Description : 测试用Demo
      */
