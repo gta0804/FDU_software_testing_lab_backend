@@ -20,6 +20,7 @@ public class Account {
 
     private Double balance;
 
+    private Integer grade; // 123分别代表一二三级用户
 
     public Account(){
 
@@ -30,6 +31,14 @@ public class Account {
         this.customerName = customerName;
         this.type = type;
         this.balance = balance;
+    }
+
+    public Integer getGrade() {
+        return grade;
+    }
+
+    public void setGrade(Integer grade) {
+        this.grade = grade;
     }
 
     public Long getAccountId() {
