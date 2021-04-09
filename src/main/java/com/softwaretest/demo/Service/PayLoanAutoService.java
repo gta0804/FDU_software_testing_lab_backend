@@ -72,6 +72,7 @@ public class PayLoanAutoService {
     }
     return flows;
   }
+
   @Transactional
   public boolean payBill(Installment installment,Account account){
     if (account.getBalance() >= installment.getAmountRemained()){

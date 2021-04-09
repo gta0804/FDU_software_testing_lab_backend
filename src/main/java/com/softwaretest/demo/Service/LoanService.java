@@ -196,4 +196,27 @@ public class LoanService {
         Timestamp expiredTime = installment.getDeadline();
         return expiredTime.before(currentTime)&&!isPaid(installment);
     }
+
+
+    public int getGrade(Account account){
+        Double balance = account.getBalance();
+        List<Loan> loans = loanRepository.findByAccountId(account.getAccountId());
+        for(Loan loan:loans){
+            List<Installment> installments = loan.getInstallments();
+            for(Installment installment:installments){
+                balance -= installment.getAmountRemained();
+            }
+        }
+        if(balance>=500000.00){
+            return 1;
+        }
+        else if(balance>=0.00){
+            return 2;
+        }
+        return 3;
+    }
+
+
+
+
 }
