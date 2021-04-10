@@ -2,13 +2,13 @@ package com.softwaretest.demo.Controller;
 
 import com.softwaretest.demo.Controller.RemoteResponse.CheckIdentityResponse;
 import com.softwaretest.demo.Controller.RemoteResponse.LoginSuccessResponse;
-import com.softwaretest.demo.Controller.Request.CheckIdentityRequest;
-import com.softwaretest.demo.Controller.Request.FinePaymentRequest;
-import com.softwaretest.demo.Controller.Request.LoginRequest;
-import com.softwaretest.demo.Controller.Request.LogoutRequest;
+import com.softwaretest.demo.Controller.Request.*;
 import com.softwaretest.demo.Controller.Response.AccountDetailsResponse;
 import com.softwaretest.demo.Controller.Response.AccountResponse;
+import com.softwaretest.demo.Domain.Flow;
 import com.softwaretest.demo.Service.LoanService;
+import com.softwaretest.demo.Service.PayLoanAutoService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +30,8 @@ public class LoanController {
     private RestTemplate restTemplate;
 
 
+    @Autowired
+    private PayLoanAutoService payLoanAutoService;
     /*
     @Description : 在查看账号之前需要先验证身份
      */
@@ -36,7 +39,6 @@ public class LoanController {
     public ResponseEntity<HashMap<String,Object>>  checkIdentity(@RequestParam String idNumber) {
         HashMap<String,Object> responseMap = new HashMap<>();
 
-        //向服务器发送请求的封装map
         List<AccountResponse> responses = loanService.getAccounts(idNumber);
         if(responses == null){
             responseMap.put("success",false);
@@ -69,6 +71,28 @@ public class LoanController {
         return ResponseEntity.ok(map);
     }
 
+    @PostMapping("/account/loan/payment/repayment")
+    public ResponseEntity<HashMap<String,Object>> loanRepay(@RequestBody LoanRepaymentRequest request){
+        HashMap<String,Object> map = new HashMap<>();
+        String message = loanService.repay(request.getAccountId(),request.getLoanId(),request.getIndex(),request.getAmount());
+        if("success".equals(message)){
+            map.put("success",true);
+            map.put("message","success");
+        }
+        else{
+            map.put("success",false);
+            map.put("message",message);
+        }
+        return ResponseEntity.ok(map);
+    }
+  @PostMapping("/account/loan/payLoanAutomatically")
+  public ResponseEntity<HashMap<String,Object>>  payLoanAutomatically(){
+    HashMap<String,Object> map = new HashMap<>();
+    HashSet<Flow> flows = new HashSet<>(payLoanAutoService.payLoanAutomatically());
+    map.put("success",!(flows.isEmpty()));
+    map.put("flows",flows);
+    return ResponseEntity.ok(map);
+  }
     /*
     @Description: 前端发送请求进行登录，后端调用服务器登录接口
     @Param
@@ -100,9 +124,7 @@ public class LoanController {
         responseMap.put("code",logoutResponse.getStatusCodeValue());
         return ResponseEntity.ok(responseMap);
     }
-
-
-
+    
     /*
     @Description : 测试用Demo
      */
