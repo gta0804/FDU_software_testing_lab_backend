@@ -2,6 +2,7 @@ package com.softwaretest.demo.Controller.Request;
 
 public class BuyWMPRequest {
     private long accountId;
+    private String title;
     private int type;
     private double amount;
     private String startDate;
@@ -26,6 +27,14 @@ public class BuyWMPRequest {
 
     public String getEndDate() {
         return endDate;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public void setEndDate(String endDate) {

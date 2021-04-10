@@ -8,4 +8,5 @@ import java.util.List;
 @Repository
 public interface AccountRepository extends CrudRepository<Account,Long> {
     List<Account> findByIdNumber(String idNumber);
+    Account findAccountByAccountId(Long accountId);
 }

@@ -49,11 +49,15 @@ public class WMP {
     public void setNumber(Integer number) {
         this.number = number;
     }
-    public WMP(Long accountId, Integer type, Double amount, ArrayList<Flow> benifits) {
+
+    public WMP(Long accountId, String title, Integer type, Double amount, Integer number, String startDate, String endDate) {
         this.accountId = accountId;
+        this.title = title;
         this.type = type;
         this.amount = amount;
-        this.benifits = benifits;
+        this.number = number;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     public WMP() {

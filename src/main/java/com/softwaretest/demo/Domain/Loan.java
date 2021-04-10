@@ -15,7 +15,6 @@ public class Loan {
     private Long id;
 
 
-    @Column(unique = true)
     private Long accountId;
 
     private Double interestRate;

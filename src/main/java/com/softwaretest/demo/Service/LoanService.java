@@ -216,6 +216,12 @@ public class LoanService {
         return 3;
     }
 
+    public void changeGrade(Account account){
+        int newGrage = getGrade(account);
+        account.setGrade(newGrage);
+        accountRepository.save(account);
+    }
+
 
 
 
