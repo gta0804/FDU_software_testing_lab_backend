@@ -17,15 +17,38 @@ public class WMP {
     // 所属的账户id
     private Long accountId;
 
+    private String title;
+
     private Integer type; // 1:定期理财产品 2：基金 3：股票
 
     private Double amount;// 初期买入金额
+
+    private Integer number; //如果是股票该字段代表多少支股，如果是定期/基金则为1
+
+
 
     @OneToMany
     private List<Flow> benifits = new LinkedList<>();
 
     private String startDate;
 
+    private String endDate;
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public Integer getNumber() {
+        return number;
+    }
+
+    public void setNumber(Integer number) {
+        this.number = number;
+    }
     public WMP(Long accountId, Integer type, Double amount, ArrayList<Flow> benifits) {
         this.accountId = accountId;
         this.type = type;
