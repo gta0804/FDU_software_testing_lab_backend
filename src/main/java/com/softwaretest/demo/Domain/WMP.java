@@ -19,21 +19,13 @@ public class WMP {
 
     private String title;
 
-    public Long getWmpId() {
-        return wmpId;
-    }
 
-    public String getTitle() {
-        return title;
-    }
 
     private Integer type; // 1:定期理财产品product 2：基金fund 3：股票share
 
     private Double amount;// 初期买入金额
 
     private Integer number; //如果是股票该字段代表多少支股，如果是定期/基金则为1
-
-
 
     @OneToMany
     private List<Flow> benifits = new LinkedList<>();
@@ -58,6 +50,13 @@ public class WMP {
         this.number = number;
     }
 
+    public Long getWmpId() {
+        return wmpId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
     public WMP(Long accountId, String title, Integer type, Double amount, Integer number, String startDate, String endDate) {
         this.accountId = accountId;
         this.title = title;
