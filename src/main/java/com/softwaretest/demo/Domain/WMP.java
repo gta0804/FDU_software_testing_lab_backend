@@ -12,14 +12,14 @@ import java.util.List;
 public class WMP {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long wmpId;
 
     // 所属的账户id
     private Long accountId;
 
     private String title;
 
-    private Integer type; // 1:定期理财产品 2：基金 3：股票
+    private Integer type; // 1:定期理财产品product 2：基金fund 3：股票share
 
     private Double amount;// 初期买入金额
 

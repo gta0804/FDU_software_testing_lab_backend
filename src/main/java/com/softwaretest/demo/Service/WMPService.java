@@ -1,7 +1,9 @@
 package com.softwaretest.demo.Service;
 
 import com.softwaretest.demo.Controller.Request.BuyWMPRequest;
+import com.softwaretest.demo.Controller.Response.BenifitsDetailResponse;
 import com.softwaretest.demo.Domain.Account;
+import com.softwaretest.demo.Domain.Flow;
 import com.softwaretest.demo.Domain.Loan;
 import com.softwaretest.demo.Domain.WMP;
 import com.softwaretest.demo.Repository.AccountRepository;
@@ -10,6 +12,8 @@ import com.softwaretest.demo.Repository.WMPRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -52,6 +56,25 @@ public class WMPService {
         wmpRepository.save(wmp);
 
         return 0;
+    }
+
+    public HashMap<String,List> allWMPs(Long accountId){
+        HashMap<String,List> hashMap = new HashMap<>();
+        hashMap.put("products", wmpRepository.findByAccountIdAndType(accountId,1));
+        hashMap.put("funds", wmpRepository.findByAccountIdAndType(accountId,2));
+        hashMap.put("shares", wmpRepository.findByAccountIdAndType(accountId,3));
+
+        return hashMap;
+    }
+
+    public List<BenifitsDetailResponse> benifitsDetail(Long wmpId){
+        WMP wmp = wmpRepository.findByWmpId(wmpId);
+        List<BenifitsDetailResponse> result = new ArrayList<>();
+        for (Flow flow:wmp.getBenifits()){
+            result.add(new BenifitsDetailResponse(flow.getAmount(),flow.getDate()));
+        }
+
+        return result;
     }
 
 }
