@@ -1,7 +1,5 @@
 package com.softwaretest.demo.Controller;
 
-import com.softwaretest.demo.Controller.RemoteResponse.CheckIdentityResponse;
-import com.softwaretest.demo.Controller.RemoteResponse.LoginSuccessResponse;
 import com.softwaretest.demo.Controller.Request.*;
 import com.softwaretest.demo.Controller.Response.AccountDetailsResponse;
 import com.softwaretest.demo.Controller.Response.AccountResponse;
@@ -51,10 +49,10 @@ public class LoanController {
     }
 
     @CrossOrigin("*")
-    @GetMapping("/account/loan/details")
-    public ResponseEntity<HashMap<String,Object>> getLoanDetails(@RequestParam Long accountId){
+    @PostMapping("/account/loan/details")
+    public ResponseEntity<HashMap<String,Object>> getLoanDetails(@RequestBody LoanDetailRequest request){
         HashMap<String,Object> map = new HashMap<>();
-        List<AccountDetailsResponse> responses = loanService.getLoans(accountId);
+        List<AccountDetailsResponse> responses = loanService.getLoans(request.getAccountId());
         map.put("loans",responses);
         map.put("success",true);
         return ResponseEntity.ok(map);
@@ -65,10 +63,10 @@ public class LoanController {
      */
 
     @CrossOrigin("*")
-    @PostMapping("/account/loan/fine/payment")
-    public ResponseEntity<HashMap<String,Object>>  payFine(@RequestParam FinePaymentRequest request){
+    @PostMapping("/account/loan/payment/fine")
+    public ResponseEntity<HashMap<String,Object>>  payFine(@RequestBody FinePaymentRequest request){
         HashMap<String,Object> map = new HashMap<>();
-        boolean result = loanService.payFine(request.getLoanId(),request.getAmount());
+        boolean result = loanService.payFine(request.getLoanId(),request.getFine());
         map.put("success",result);
         return ResponseEntity.ok(map);
     }

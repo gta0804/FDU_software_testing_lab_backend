@@ -4,21 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 @Controller
-public class FinePaymentRequest {
+public class LoanDetailRequest {
+
     private Long accountId;
-    private Long loanId;
-    private Double fine;
 
     @Autowired
-    public FinePaymentRequest(){
+    public  LoanDetailRequest(){
 
     }
 
-    public Long getLoanId() {
-        return loanId;
-    }
-
-    public Double getFine() {
-        return fine;
+    public Long getAccountId() {
+        return accountId;
     }
 }
