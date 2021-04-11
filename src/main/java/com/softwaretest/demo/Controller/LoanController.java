@@ -35,14 +35,8 @@ public class LoanController {
     /*
     @Description : 在查看账号之前需要先验证身份
      */
-<<<<<<< HEAD
     @PostMapping("/account/check")
     public ResponseEntity<HashMap<String,Object>>  checkIdentity(@RequestBody CheckIdentityRequest request) {
-=======
-    @CrossOrigin("*")
-    @GetMapping("/account/check")
-    public ResponseEntity<HashMap<String,Object>>  checkIdentity(@RequestParam String idNumber) {
->>>>>>> 835f3d7d68637c03a5d1a2c7fe9d5998dc734d15
         HashMap<String,Object> responseMap = new HashMap<>();
 
         List<AccountResponse> responses = loanService.getAccounts(request.getIdNumber());
