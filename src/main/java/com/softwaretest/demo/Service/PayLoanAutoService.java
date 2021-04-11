@@ -44,16 +44,23 @@ public class PayLoanAutoService {
       Account account = accountRepository.findById(accountID).orElse(null);
       if (null == account)continue a;
       List<Installment> installments = loan.getInstallments();
-      Iterator<Installment> iterator = installments.iterator();
-      while(iterator.hasNext()) {
-        Installment installment = iterator.next();
+      if (installments.isEmpty()) continue a;
+      HashSet<Long> installmentIDs = new HashSet<>();
+      for (Installment installment : installments) {
+        installmentIDs.add(installment.getId());
+      }
+      for (Long installmentID : installmentIDs) {
+        Installment installment = installmentRepository.findById(installmentID).orElse(null);
+        if (null == installment) continue ;
         //分期过期且没还钱
         if (isExpired(installment) && !isPaid(installment)){
           double fine = getFine(loan);
           //没有交罚款
           if (fine > 0){
             if (account.getBalance() >= fine){
-              flows.add(payFine(loan.getId(),fine,true));
+              Flow tmpflow = payFine(loan.getId(),fine,true);
+              flows.add(tmpflow);
+              flowRepository.save(tmpflow);
             }else{
               continue a;
             }
@@ -63,6 +70,7 @@ public class PayLoanAutoService {
             if(payBill(installment,account)){
               Flow flow = new Flow("贷款还款",account.getAccountId(),amountRemained,new Timestamp(System.currentTimeMillis()));
               flows.add(flow);
+              flowRepository.save(flow);
             }
 
           }
@@ -70,6 +78,7 @@ public class PayLoanAutoService {
           continue;
         }
       }
+
     }
     return flows;
   }

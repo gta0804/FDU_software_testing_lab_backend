@@ -94,6 +94,9 @@ public class LoanController {
     HashSet<Flow> flows = new HashSet<>(payLoanAutoService.payLoanAutomatically());
     map.put("success",!(flows.isEmpty()));
     map.put("flows",flows);
+      for (Flow flow : flows) {
+        System.out.println(flow.toString());
+      }
     return ResponseEntity.ok(map);
   }
     /*
