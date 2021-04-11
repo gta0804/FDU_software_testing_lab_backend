@@ -35,11 +35,11 @@ public class LoanController {
     /*
     @Description : 在查看账号之前需要先验证身份
      */
-    @GetMapping("/account/check")
-    public ResponseEntity<HashMap<String,Object>>  checkIdentity(@RequestParam String idNumber) {
+    @PostMapping("/account/check")
+    public ResponseEntity<HashMap<String,Object>>  checkIdentity(@RequestBody CheckIdentityRequest request) {
         HashMap<String,Object> responseMap = new HashMap<>();
 
-        List<AccountResponse> responses = loanService.getAccounts(idNumber);
+        List<AccountResponse> responses = loanService.getAccounts(request.getIdNumber());
         if(responses == null){
             responseMap.put("success",false);
         }
@@ -102,16 +102,19 @@ public class LoanController {
     public ResponseEntity<HashMap<String,Object>> login(@RequestBody LoginRequest request){
         HashMap<String,Object> responseMap = new HashMap<>();
 
-        Map<String,Object> requestMap = new HashMap<>();
-        requestMap.put("username",request.getUsername());
-        requestMap.put("password",request.getPassword());
-        ResponseEntity<LoginSuccessResponse> loginResponse = restTemplate.postForEntity("http://10.176.122.174:8080/sys/login/restful",requestMap,LoginSuccessResponse.class);
-        LoginSuccessResponse responseBody = loginResponse.getBody();
-        responseMap.put("code",loginResponse.getStatusCodeValue());
-        if(responseBody!=null){
-            responseMap.put("expireTime",responseBody.getExpireTime());
-            responseMap.put("token",responseBody.getToken());
-        }
+//        Map<String,Object> requestMap = new HashMap<>();
+//        requestMap.put("username",request.getUsername());
+//        requestMap.put("password",request.getPassword());
+//        ResponseEntity<LoginSuccessResponse> loginResponse = restTemplate.postForEntity("http://10.176.122.174:8012/sys/login/restful",requestMap,LoginSuccessResponse.class);
+//        LoginSuccessResponse responseBody = loginResponse.getBody();
+//        responseMap.put("code",loginResponse.getStatusCodeValue());
+//        if(responseBody!=null){
+//            responseMap.put("expireTime",responseBody.getExpireTime());
+//            responseMap.put("token",responseBody.getToken());
+//        }
+        responseMap.put("code",200);
+        responseMap.put("token","faketoken");
+        responseMap.put("expireTime","never");
         return ResponseEntity.ok(responseMap);
     }
 

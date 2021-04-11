@@ -19,6 +19,14 @@ public class WMP {
 
     private String title;
 
+    public Long getWmpId() {
+        return wmpId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
     private Integer type; // 1:定期理财产品product 2：基金fund 3：股票share
 
     private Double amount;// 初期买入金额

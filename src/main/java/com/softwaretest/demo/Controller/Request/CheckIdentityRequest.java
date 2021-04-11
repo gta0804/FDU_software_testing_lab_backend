@@ -6,20 +6,14 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class CheckIdentityRequest {
 
-    private String IDNumber;
-    private String token;
+    private String idNumber;
 
 
-    @Autowired
-    public CheckIdentityRequest(){
-
+    public String getIdNumber() {
+        return idNumber;
     }
 
-    public String getIDNumber() {
-        return IDNumber;
-    }
-
-    public String getToken() {
-        return token;
+    public void setIdNumber(String idNumber) {
+        this.idNumber = idNumber;
     }
 }

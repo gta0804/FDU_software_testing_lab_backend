@@ -46,7 +46,7 @@ public class LoanService {
         }
         List<AccountResponse> accountDetailsResponses = new LinkedList<>();
         for(Account account: accounts){
-            accountDetailsResponses.add(new AccountResponse(account.getAccountId(),account.getCustomerName(),account.getBalance(),account.getType()));
+            accountDetailsResponses.add(new AccountResponse(account.getAccountId(),account.getCustomerName(),account.getBalance(),account.getType(),getGrade(account)));
         }
         return accountDetailsResponses;
     }
