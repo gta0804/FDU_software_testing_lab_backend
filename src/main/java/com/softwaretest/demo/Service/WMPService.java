@@ -7,11 +7,13 @@ import com.softwaretest.demo.Domain.Flow;
 import com.softwaretest.demo.Domain.Loan;
 import com.softwaretest.demo.Domain.WMP;
 import com.softwaretest.demo.Repository.AccountRepository;
+import com.softwaretest.demo.Repository.FlowRepository;
 import com.softwaretest.demo.Repository.LoanRepository;
 import com.softwaretest.demo.Repository.WMPRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +31,9 @@ public class WMPService {
 
     @Autowired
     private WMPRepository wmpRepository;
+
+    @Autowired
+    private FlowRepository flowRepository;
 
     public int buyWMP(BuyWMPRequest request) {
         Account account = accountRepository.findAccountByAccountId(request.getAccountId());
@@ -49,29 +54,68 @@ public class WMPService {
         //判断账户余额
         if (account.getBalance() < request.getAmount()) return 2;
 
-        account.setBalance(account.getBalance()-request.getAmount());
+        account.setBalance(account.getBalance() - request.getAmount());
         accountRepository.save(account);
 
-        WMP wmp = new WMP(request.getAccountId(),request.getTitle(),request.getType(),request.getAmount(), request.getNumber(),request.getStartDate(),request.getEndDate());
+        WMP wmp = new WMP(request.getAccountId(), request.getTitle(), request.getType(), request.getAmount(), request.getNumber(), request.getStartDate(), request.getEndDate());
         wmpRepository.save(wmp);
 
         return 0;
     }
 
-    public HashMap<String,List> allWMPs(Long accountId){
-        HashMap<String,List> hashMap = new HashMap<>();
-        hashMap.put("products", wmpRepository.findByAccountIdAndType(accountId,1));
-        hashMap.put("funds", wmpRepository.findByAccountIdAndType(accountId,2));
-        hashMap.put("shares", wmpRepository.findByAccountIdAndType(accountId,3));
+    public void updateWMPs(Long accountId) {
+        List<WMP> products = wmpRepository.findByAccountIdAndType(accountId, 1);
+        List<WMP> funds = wmpRepository.findByAccountIdAndType(accountId, 2);
+        List<WMP> shares = wmpRepository.findByAccountIdAndType(accountId, 3);
+
+        for (WMP e : products) {
+            double rate = 0;
+            if (e.getTitle().contains("1")) rate = 0.01;
+            if (e.getTitle().contains("2")) rate = 0.02;
+            if (e.getTitle().contains("3")) rate = 0.03;
+            Flow benefit = new Flow("理财产品流水 " + e.getTitle(), accountId, e.getAmount() * rate, new Timestamp(System.currentTimeMillis()));
+            flowRepository.save(benefit);
+
+            e.getBenifits().add(benefit);
+            wmpRepository.save(e);
+        }
+
+        for (WMP e : funds) {
+            double rate = 0;
+            if (e.getTitle().contains("1")) rate = 0.01;
+            if (e.getTitle().contains("2")) rate = 0.02;
+            if (e.getTitle().contains("3")) rate = 0.03;
+            Flow benefit = new Flow("理财产品流水 " + e.getTitle(), accountId, e.getAmount() * rate, new Timestamp(System.currentTimeMillis()));
+            flowRepository.save(benefit);
+
+            e.getBenifits().add(benefit);
+            wmpRepository.save(e);
+        }
+
+        for (WMP e : shares) {
+            double rate = (Math.random() - 0.5) / 10;
+            Flow benefit = new Flow("理财产品流水 " + e.getTitle(), accountId, e.getAmount() * rate , new Timestamp(System.currentTimeMillis()));
+            flowRepository.save(benefit);
+
+            e.getBenifits().add(benefit);
+            wmpRepository.save(e);
+        }
+    }
+
+    public HashMap<String, List> allWMPs(Long accountId) {
+        HashMap<String, List> hashMap = new HashMap<>();
+        hashMap.put("products", wmpRepository.findByAccountIdAndType(accountId, 1));
+        hashMap.put("funds", wmpRepository.findByAccountIdAndType(accountId, 2));
+        hashMap.put("shares", wmpRepository.findByAccountIdAndType(accountId, 3));
 
         return hashMap;
     }
 
-    public List<BenifitsDetailResponse> benifitsDetail(Long wmpId){
+    public List<BenifitsDetailResponse> benifitsDetail(Long wmpId) {
         WMP wmp = wmpRepository.findByWmpId(wmpId);
         List<BenifitsDetailResponse> result = new ArrayList<>();
-        for (Flow flow:wmp.getBenifits()){
-            result.add(new BenifitsDetailResponse(flow.getAmount(),flow.getDate()));
+        for (Flow flow : wmp.getBenifits()) {
+            result.add(new BenifitsDetailResponse(flow.getAmount(), flow.getDate()));
         }
 
         return result;
