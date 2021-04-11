@@ -1,10 +1,7 @@
 package com.softwaretest.demo.Service;
 
 import java.sql.Timestamp;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.transaction.Transactional;
 
@@ -47,7 +44,9 @@ public class PayLoanAutoService {
       Account account = accountRepository.findById(accountID).orElse(null);
       if (null == account)continue a;
       List<Installment> installments = loan.getInstallments();
-      for (Installment installment : installments) {
+      Iterator<Installment> iterator = installments.iterator();
+      while(iterator.hasNext()) {
+        Installment installment = iterator.next();
         //分期过期且没还钱
         if (isExpired(installment) && !isPaid(installment)){
           double fine = getFine(loan);
@@ -95,7 +94,7 @@ public class PayLoanAutoService {
     }
     List<AccountResponse> accountDetailsResponses = new LinkedList<>();
     for(Account account: accounts){
-      accountDetailsResponses.add(new AccountResponse(account.getAccountId(),account.getCustomerName(),account.getBalance(),account.getType()));
+      accountDetailsResponses.add(new AccountResponse(account.getAccountId(),account.getCustomerName(),account.getBalance(),account.getType(),account.getGrade()));
     }
     return accountDetailsResponses;
   }

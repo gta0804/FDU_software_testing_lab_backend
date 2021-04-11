@@ -45,7 +45,7 @@ public class LoanServiceTest {
     @Test
     void insertLoan(){
         List<Account> accounts = accountRepository.findByIdNumber("123456");
-        if(accounts != null){
+        if(accounts == null){
             return;
         }
         Account account = accounts.get(0);

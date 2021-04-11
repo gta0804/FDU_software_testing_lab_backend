@@ -1,7 +1,5 @@
 package com.softwaretest.demo.Controller;
 
-import com.softwaretest.demo.Controller.RemoteResponse.CheckIdentityResponse;
-import com.softwaretest.demo.Controller.RemoteResponse.LoginSuccessResponse;
 import com.softwaretest.demo.Controller.Request.*;
 import com.softwaretest.demo.Controller.Response.AccountDetailsResponse;
 import com.softwaretest.demo.Controller.Response.AccountResponse;
@@ -35,14 +33,8 @@ public class LoanController {
     /*
     @Description : 在查看账号之前需要先验证身份
      */
-<<<<<<< HEAD
     @PostMapping("/account/check")
     public ResponseEntity<HashMap<String,Object>>  checkIdentity(@RequestBody CheckIdentityRequest request) {
-=======
-    @CrossOrigin("*")
-    @GetMapping("/account/check")
-    public ResponseEntity<HashMap<String,Object>>  checkIdentity(@RequestParam String idNumber) {
->>>>>>> 835f3d7d68637c03a5d1a2c7fe9d5998dc734d15
         HashMap<String,Object> responseMap = new HashMap<>();
 
         List<AccountResponse> responses = loanService.getAccounts(request.getIdNumber());
@@ -57,10 +49,10 @@ public class LoanController {
     }
 
     @CrossOrigin("*")
-    @GetMapping("/account/loan/details")
-    public ResponseEntity<HashMap<String,Object>> getLoanDetails(@RequestParam Long accountId){
+    @PostMapping("/account/loan/details")
+    public ResponseEntity<HashMap<String,Object>> getLoanDetails(@RequestBody LoanDetailRequest request){
         HashMap<String,Object> map = new HashMap<>();
-        List<AccountDetailsResponse> responses = loanService.getLoans(accountId);
+        List<AccountDetailsResponse> responses = loanService.getLoans(request.getAccountId());
         map.put("loans",responses);
         map.put("success",true);
         return ResponseEntity.ok(map);
@@ -71,10 +63,10 @@ public class LoanController {
      */
 
     @CrossOrigin("*")
-    @PostMapping("/account/loan/fine/payment")
-    public ResponseEntity<HashMap<String,Object>>  payFine(@RequestParam FinePaymentRequest request){
+    @PostMapping("/account/loan/payment/fine")
+    public ResponseEntity<HashMap<String,Object>>  payFine(@RequestBody FinePaymentRequest request){
         HashMap<String,Object> map = new HashMap<>();
-        boolean result = loanService.payFine(request.getLoanId(),request.getAmount());
+        boolean result = loanService.payFine(request.getLoanId(),request.getFine());
         map.put("success",result);
         return ResponseEntity.ok(map);
     }
