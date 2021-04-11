@@ -95,7 +95,9 @@ public class DemoApplication {
 
                 Flow flow = new Flow("贷款发放",account.getAccountId(),loanAmount,castStringToTimeStamp("2021-01-" + day + " 00:00:00"));
                 flowRepository.save(flow);
+                System.out.println(accountToAdd.toString());
 
+                System.out.println(flow.toString());
             }
 
         };
