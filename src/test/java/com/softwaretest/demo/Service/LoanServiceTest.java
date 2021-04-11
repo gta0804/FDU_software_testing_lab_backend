@@ -45,7 +45,7 @@ public class LoanServiceTest {
     @Test
     void insertLoan(){
         List<Account> accounts = accountRepository.findByIdNumber("123456");
-        if(accounts == null){
+        if(accounts != null){
             return;
         }
         Account account = accounts.get(0);
@@ -59,6 +59,10 @@ public class LoanServiceTest {
         Installment installment2 = new Installment(4200.00,4200.00,castStringToTimeStamp("2021-03-28 00:00:00"));
         Installment installment3 = new Installment(4200.00,4200.00,castStringToTimeStamp("2021-04-28 00:00:00"));
         List<Installment> installments = new LinkedList<>();
+        installmentRepository.save(installment1);
+        installmentRepository.save(installment2);
+        installmentRepository.save(installment3);
+
         installments.add(installment1); installments.add(installment2); installments.add(installment3);
         installmentRepository.saveAll(installments);
         loan.setInstallments(installments);

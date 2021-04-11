@@ -75,4 +75,15 @@ public class Flow {
     public void setDate(Timestamp date) {
         this.date = date;
     }
+
+    @Override
+    public String toString() {
+        return "Flow{" +
+                "id=" + id +
+                ", type='" + type + '\'' +
+                ", accountId=" + accountId +
+                ", amount=" + amount +
+                ", date=" + date +
+                '}';
+    }
 }

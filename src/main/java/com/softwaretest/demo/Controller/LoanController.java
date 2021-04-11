@@ -35,8 +35,14 @@ public class LoanController {
     /*
     @Description : 在查看账号之前需要先验证身份
      */
+<<<<<<< HEAD
     @PostMapping("/account/check")
     public ResponseEntity<HashMap<String,Object>>  checkIdentity(@RequestBody CheckIdentityRequest request) {
+=======
+    @CrossOrigin("*")
+    @GetMapping("/account/check")
+    public ResponseEntity<HashMap<String,Object>>  checkIdentity(@RequestParam String idNumber) {
+>>>>>>> 835f3d7d68637c03a5d1a2c7fe9d5998dc734d15
         HashMap<String,Object> responseMap = new HashMap<>();
 
         List<AccountResponse> responses = loanService.getAccounts(request.getIdNumber());
@@ -50,6 +56,7 @@ public class LoanController {
         return ResponseEntity.ok(responseMap);
     }
 
+    @CrossOrigin("*")
     @GetMapping("/account/loan/details")
     public ResponseEntity<HashMap<String,Object>> getLoanDetails(@RequestParam Long accountId){
         HashMap<String,Object> map = new HashMap<>();
@@ -63,6 +70,7 @@ public class LoanController {
     @Description : 缴纳罚金，罚金缴纳具有原子性，只能全部缴纳或者余额不足退出
      */
 
+    @CrossOrigin("*")
     @PostMapping("/account/loan/fine/payment")
     public ResponseEntity<HashMap<String,Object>>  payFine(@RequestParam FinePaymentRequest request){
         HashMap<String,Object> map = new HashMap<>();
@@ -71,6 +79,7 @@ public class LoanController {
         return ResponseEntity.ok(map);
     }
 
+    @CrossOrigin("*")
     @PostMapping("/account/loan/payment/repayment")
     public ResponseEntity<HashMap<String,Object>> loanRepay(@RequestBody LoanRepaymentRequest request){
         HashMap<String,Object> map = new HashMap<>();
@@ -85,6 +94,8 @@ public class LoanController {
         }
         return ResponseEntity.ok(map);
     }
+
+    @CrossOrigin("*")
   @PostMapping("/account/loan/payLoanAutomatically")
   public ResponseEntity<HashMap<String,Object>>  payLoanAutomatically(){
     HashMap<String,Object> map = new HashMap<>();
@@ -98,6 +109,8 @@ public class LoanController {
     @Param
        code 表示请求服务器的响应状态码
      */
+
+    @CrossOrigin("*")
     @RequestMapping("/login")
     public ResponseEntity<HashMap<String,Object>> login(@RequestBody LoginRequest request){
         HashMap<String,Object> responseMap = new HashMap<>();
@@ -118,6 +131,7 @@ public class LoanController {
         return ResponseEntity.ok(responseMap);
     }
 
+    @CrossOrigin("*")
     @RequestMapping("/logout")
     public ResponseEntity<HashMap<String,Object>> logout(@RequestBody LogoutRequest request){
         HashMap<String,Object> responseMap = new HashMap<>();
@@ -131,6 +145,7 @@ public class LoanController {
     /*
     @Description : 测试用Demo
      */
+    @CrossOrigin("*")
     @RequestMapping("/hello")
     public String hello(){
         return "redirect:hello.html";

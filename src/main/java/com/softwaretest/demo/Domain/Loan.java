@@ -21,7 +21,7 @@ public class Loan {
 
     private Double amount;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Installment> installments = new LinkedList<>();
 
     private Timestamp startDate;

@@ -101,7 +101,7 @@ public class LoanService {
     loanRepository.save(loan);
     accountRepository.save(account);
 
-    Flow flow = new Flow("贷款罚金缴纳", account.getAccountId(), amount, new Timestamp(System.currentTimeMillis()));
+    Flow flow = new Flow("罚金缴纳", account.getAccountId(), amount, new Timestamp(System.currentTimeMillis()));
     flowRepository.save(flow);
     return flow;
   }
