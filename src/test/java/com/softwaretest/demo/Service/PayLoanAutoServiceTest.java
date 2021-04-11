@@ -23,7 +23,7 @@ import java.util.List;
  * @author: Shen Zhengyu
  * @create: 2021-04-11 11:10
  **/
-@SpringBootTest(classes = PayLoanAutoService.class)
+@SpringBootTest
 public class PayLoanAutoServiceTest {
 
     @Autowired
@@ -67,14 +67,18 @@ public class PayLoanAutoServiceTest {
             loan.setInterestRate(0.05);
             loan.setStartDate(castStringToTimeStamp("2021-01-23 00:00:00"));
             Installment installment0 = new Installment(4200.00,4200.00,castStringToTimeStamp("2021-02-23 00:00:00"));
-
+            installmentRepository.save(installment0);
             Installment installment1 = new Installment(4200.00,4200.00,castStringToTimeStamp("2021-03-23 00:00:00"));
             Installment installment2 = new Installment(4200.00,4200.00,castStringToTimeStamp("2021-04-23 00:00:00"));
             Installment installment3 = new Installment(4200.00,4200.00,castStringToTimeStamp("2021-05-23 00:00:00"));
+            installmentRepository.save(installment1);
+            installmentRepository.save(installment2);
+            installmentRepository.save(installment3);
+
             List<Installment> installments = new LinkedList<>();
+
             installments.add(installment0);
             installments.add(installment1); installments.add(installment2); installments.add(installment3);
-            installmentRepository.saveAll(installments);
             loan.setInstallments(installments);
             loanRepository.save(loan);
 
