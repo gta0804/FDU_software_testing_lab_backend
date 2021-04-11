@@ -15,8 +15,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
+
 /**
  * @program: demo
  * @description:
@@ -102,6 +105,5 @@ public class PayLoanAutoServiceTest {
     public void testPayBill() throws Exception {
 //TODO: Test goes here...
     }
-
 
 }
