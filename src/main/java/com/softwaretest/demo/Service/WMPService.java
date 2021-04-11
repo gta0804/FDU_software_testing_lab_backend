@@ -60,6 +60,9 @@ public class WMPService {
         WMP wmp = new WMP(request.getAccountId(), request.getTitle(), request.getType(), request.getAmount(), request.getNumber(), request.getStartDate(), request.getEndDate());
         wmpRepository.save(wmp);
 
+        Flow flow = new Flow("理财产品流水 购买 "+request.getTitle(),request.getAccountId(),request.getAmount(),new Timestamp(System.currentTimeMillis()));
+        flowRepository.save(flow);
+
         return 0;
     }
 
@@ -73,7 +76,7 @@ public class WMPService {
             if (e.getTitle().contains("1")) rate = 0.01;
             if (e.getTitle().contains("2")) rate = 0.02;
             if (e.getTitle().contains("3")) rate = 0.03;
-            Flow benefit = new Flow("理财产品流水 " + e.getTitle(), accountId, e.getAmount() * rate, new Timestamp(System.currentTimeMillis()));
+            Flow benefit = new Flow("理财产品流水 收入 " + e.getTitle(), accountId, e.getAmount() * rate, new Timestamp(System.currentTimeMillis()));
             flowRepository.save(benefit);
 
             e.getBenifits().add(benefit);
@@ -85,7 +88,7 @@ public class WMPService {
             if (e.getTitle().contains("1")) rate = 0.01;
             if (e.getTitle().contains("2")) rate = 0.02;
             if (e.getTitle().contains("3")) rate = 0.03;
-            Flow benefit = new Flow("理财产品流水 " + e.getTitle(), accountId, e.getAmount() * rate, new Timestamp(System.currentTimeMillis()));
+            Flow benefit = new Flow("理财产品流水 收入 " + e.getTitle(), accountId, e.getAmount() * rate, new Timestamp(System.currentTimeMillis()));
             flowRepository.save(benefit);
 
             e.getBenifits().add(benefit);
@@ -94,7 +97,7 @@ public class WMPService {
 
         for (WMP e : shares) {
             double rate = (Math.random() - 0.5) / 10;
-            Flow benefit = new Flow("理财产品流水 " + e.getTitle(), accountId, e.getAmount() * rate , new Timestamp(System.currentTimeMillis()));
+            Flow benefit = new Flow("理财产品流水 收入 " + e.getTitle(), accountId, e.getAmount() * rate , new Timestamp(System.currentTimeMillis()));
             flowRepository.save(benefit);
 
             e.getBenifits().add(benefit);

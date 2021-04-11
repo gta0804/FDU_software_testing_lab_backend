@@ -31,7 +31,7 @@ public class WMPController {
 
     @PostMapping("/wmp/allwmps")
     public ResponseEntity<Object> allWMPs(@RequestBody AllWMPsRequest request){
-
+        wmpService.updateWMPs(request.getAccountId());
         return ResponseEntity.ok(wmpService.allWMPs(request.getAccountId()));
     }
 
