@@ -13,10 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 public class LoanController {
@@ -84,6 +81,7 @@ public class LoanController {
             map.put("success",false);
             map.put("message",message);
         }
+        Deque<Integer> lists= new LinkedList<>();
         return ResponseEntity.ok(map);
     }
 

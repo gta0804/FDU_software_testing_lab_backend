@@ -45,6 +45,7 @@ public class DemoApplication {
 
     @Autowired
     private FlowRepository flowRepository;
+    /*
     @Bean
     public CommandLineRunner dataLoader(AccountRepository accountRepository, LoanRepository loanRepository,InstallmentRepository installmentRepository,FlowRepository flowRepository) {
         return new CommandLineRunner() {
@@ -102,6 +103,8 @@ public class DemoApplication {
 
         };
     }
+
+     */
     public static int getRandom(int start, int end) {
         int num = (int) (Math.random() * (end - start + 1)) + start;
         return num;

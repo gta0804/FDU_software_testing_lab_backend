@@ -56,9 +56,10 @@ public class LoanService {
      */
     public List<AccountDetailsResponse> getLoans(Long accountId){
         List<Loan> loans = loanRepository.findByAccountId(accountId);
-        if(loans == null){
-            return null;
+        if(loans == null ||loans.size() == 0){
+                return null;
         }
+
 
         List<AccountDetailsResponse> accountDetailsResponses = new LinkedList<>();
         for(Loan loan:loans){
@@ -105,7 +106,8 @@ public class LoanService {
     flowRepository.save(flow);
     return flow;
   }
-    public boolean payFine(Long loanId,Double amount){
+
+  public boolean payFine(Long loanId,Double amount){
         Loan loan = loanRepository.findById(loanId).orElse(null);
         if(loan == null){
             return false;
