@@ -54,7 +54,7 @@ public class PayLoanAutoServiceTest {
      * Method: payLoanAutomatically()
      */
     @Test
-//    @Rollback(false)
+    @Rollback()
     public void testPayLoanAutomatically() throws Exception {
         String toAddId = new String();
         for (int i = 0; i < 10000; i++) {
