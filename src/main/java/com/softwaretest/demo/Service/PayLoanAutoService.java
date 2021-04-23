@@ -96,26 +96,18 @@ public class PayLoanAutoService {
   }
 
 
-  public List<AccountResponse> getAccounts(String idNumber){
-    List<Account> accounts = accountRepository.findByIdNumber(idNumber);
-    if(accounts == null){
-      return null;
-    }
-    List<AccountResponse> accountDetailsResponses = new LinkedList<>();
-    for(Account account: accounts){
-      accountDetailsResponses.add(new AccountResponse(account.getAccountId(),account.getCustomerName(),account.getBalance(),account.getType(),account.getGrade()));
-    }
-    return accountDetailsResponses;
-  }
 
 
   public Flow payFine(Long loanId, Double amount, boolean overload) {
     Loan loan = loanRepository.findById(loanId).orElse(null);
-    if (loan == null) {
+    if (null == loan) {
+      System.out.println(this.getClass().getName() +"中的方法走进了");
       return null;
     }
+    System.out.println(this.getClass().getName() +"中的方法没走进");
+
     Account account = accountRepository.findById(loan.getAccountId()).orElse(null);
-    if (account == null) {
+    if (null == account) {
       return null;
     }
     if (account.getBalance() < amount) {
