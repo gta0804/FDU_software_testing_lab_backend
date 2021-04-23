@@ -113,9 +113,6 @@ public class LoanService {
             return false;
         }
         Account account = accountRepository.findById(loan.getAccountId()).orElse(null);
-        if(account == null){
-            return false;
-        }
         if(account.getBalance()<amount){
             return false;
         }

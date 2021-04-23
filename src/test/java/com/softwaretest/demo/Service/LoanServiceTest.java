@@ -1,5 +1,6 @@
 package com.softwaretest.demo.Service;
 
+import com.softwaretest.demo.Controller.Request.FinePaymentRequest;
 import com.softwaretest.demo.Controller.Response.AccountDetailsResponse;
 import com.softwaretest.demo.Controller.Response.AccountResponse;
 import com.softwaretest.demo.DemoApplication;
@@ -37,6 +38,11 @@ public class LoanServiceTest {
 
     @Autowired
     private LoanService loanService;
+
+
+    /*
+    @description: 用来插入测试数据，成功后需要注释掉，以防正式测试时测试失败
+     */
 
     @Test
     void insertAccountA(){
@@ -91,13 +97,17 @@ public class LoanServiceTest {
         flowRepository.save(flow2);
     }
 
+    /*
+    @description: 用来插入测试数据，成功后需要注释掉，以防正式测试时测试失败
+     */
+
     @Test
     void insertAccountB(){
         //存第二个账号，其余额较少，用于测试自动还款和手动还款失败的情况
         Account account2 = new Account();
         account2.setIdNumber("567890");
         account2.setType("储蓄");
-        account2.setBalance(500.00);
+        account2.setBalance(100.00);
         accountRepository.save(account2);
 
         Loan loan3 = new Loan();
@@ -120,6 +130,9 @@ public class LoanServiceTest {
         flowRepository.save(flow2);
     }
 
+    /*
+    @Description : 幂等操作
+     */
     @Test
     void testIdentityCheck(){
         List<AccountResponse> responses1 = loanService.getAccounts("12345678");
@@ -127,7 +140,7 @@ public class LoanServiceTest {
         Assert.isTrue(responses1.size() == 0);
 
         List<AccountResponse> responses2 = loanService.getAccounts("123456");
-        Assert.isTrue(responses2.size() ==2);
+        Assert.isTrue(responses2.size() ==accountRepository.findByIdNumber("123456").size());
         Assert.isTrue(responses2.get(0).getCustomerName().equals("郭泰安") );
     }
 
@@ -144,14 +157,64 @@ public class LoanServiceTest {
 
         //再用一个已经注册的账号
         List<AccountDetailsResponse> responses2 = loanService.getLoans(accountId);
-        Assert.isTrue(responses2.size() == 1);
+        Assert.isTrue(responses2.size() == 2);
         Assert.isTrue(responses2.get(0).getInstallments().size() == 3);
         Assert.isTrue(responses2.get(0).getFine() == 210.00);
+
     }
 
     @Test
     void testPayFine(){
+        //测试成功归还罚款
+        List<Account> accounts = accountRepository.findByIdNumber("123456");
+        Long accountId = accounts.get(0).getAccountId();
+        List<AccountDetailsResponse> responses2 = loanService.getLoans(accountId);
+        Loan loan1 =loanRepository.findById( responses2.get(0).getLoanId()).orElse(null);
+        Assert.isTrue(loan1!=null);
+        boolean isPayFineSuccess1 = loanService.payFine(loan1.getId(),responses2.get(0).getFine());
+        Assert.isTrue(isPayFineSuccess1);
 
+        //测试贷款Id不存在
+        boolean isPayFineSuccess2 = loanService.payFine(234567898L,0.00);
+        Assert.isTrue(!isPayFineSuccess2);
+
+        //测试余额不足，缴纳罚款失败
+        List<Account> accounts2 = accountRepository.findByIdNumber("567890");
+        Long accountId2 = accounts2.get(0).getAccountId();
+        List<AccountDetailsResponse> responses3 = loanService.getLoans(accountId2);
+        Loan loan2 =loanRepository.findById( responses3.get(0).getLoanId()).orElse(null);
+        Assert.isTrue(loan2!=null);
+        boolean isPayFineSuccess3 = loanService.payFine(loan2.getId(),responses3.get(0).getFine());
+        Assert.isTrue(!isPayFineSuccess3);
+    }
+
+    @Test
+    void testRepayment(){
+        List<Account> accounts1 = accountRepository.findByIdNumber("123456");
+        Long accountId1 = accounts1.get(0).getAccountId();
+        List<AccountDetailsResponse> accountDetails1 = loanService.getLoans(accountId1);
+        //成功手动还款
+        String repaymentResult1 = loanService.repay(accountId1,accountDetails1.get(0).getLoanId(),0,4200.00);
+        Assert.isTrue(repaymentResult1.equals("success"));
+
+        //账户不存在
+        String repaymentResult2 = loanService.repay(accountId1+1230601,accountDetails1.get(0).getLoanId(),0,4200.00);
+        Assert.isTrue(repaymentResult2.equals("付款账号不存在"));
+
+        //贷款id不存在
+        String repaymentResult3 = loanService.repay(accountId1,accountDetails1.get(0).getLoanId()+1230601,0,4200.00);
+        Assert.isTrue(repaymentResult3.equals("贷款不存在"));
+
+        //分期索引非法
+        String repaymentResult4 = loanService.repay(accountId1,accountDetails1.get(0).getLoanId(),-1,4200.00);
+        Assert.isTrue(repaymentResult4.equals("分期索引非法"));
+
+        //测试余额不足的情况
+        List<Account> accounts2 = accountRepository.findByIdNumber("567890");
+        Long accountId2 = accounts2.get(0).getAccountId();
+        List<AccountDetailsResponse> accountDetails2= loanService.getLoans(accountId2);
+        String repaymentResult5 = loanService.repay(accountId2,accountDetails2.get(0).getLoanId(),0,4200.00);
+        Assert.isTrue(repaymentResult5.equals("余额不足"));
     }
 
     private Timestamp castStringToTimeStamp(String timeStr){
