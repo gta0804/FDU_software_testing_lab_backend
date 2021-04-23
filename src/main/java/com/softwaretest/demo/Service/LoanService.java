@@ -41,9 +41,6 @@ public class LoanService {
 
     public List<AccountResponse> getAccounts(String idNumber){
         List<Account> accounts = accountRepository.findByIdNumber(idNumber);
-        if(accounts == null){
-            return null;
-        }
         List<AccountResponse> accountDetailsResponses = new LinkedList<>();
         for(Account account: accounts){
             accountDetailsResponses.add(new AccountResponse(account.getAccountId(),account.getCustomerName(),account.getBalance(),account.getType(),getGrade(account)));

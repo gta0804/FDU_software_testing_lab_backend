@@ -33,4 +33,8 @@ public class AccountResponse {
     public String getCustomerName() {
         return customerName;
     }
+
+    public int getGrade() {
+        return grade;
+    }
 }

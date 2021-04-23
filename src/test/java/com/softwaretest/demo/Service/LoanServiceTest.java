@@ -99,6 +99,7 @@ public class LoanServiceTest {
 
     /*
     @description: 用来插入测试数据，成功后需要注释掉，以防正式测试时测试失败
+    插入一个余额很少，归还罚款和贷款都会失败的账号
      */
 
     @Test
@@ -108,6 +109,7 @@ public class LoanServiceTest {
         account2.setIdNumber("567890");
         account2.setType("储蓄");
         account2.setBalance(100.00);
+        account2.setCustomerName("郭泰安");
         accountRepository.save(account2);
 
         Loan loan3 = new Loan();
@@ -131,17 +133,47 @@ public class LoanServiceTest {
     }
 
     /*
+    @Description : 用来插入测试数据，在插入成功正式测试时需要将其注释掉
+    插入一个余额及其充足，且没有贷款的账号
+     */
+
+    @Test
+    void insertAccountC(){
+        Account account3 = new Account();
+        account3.setBalance(20000000.00);
+        account3.setIdNumber("234567");
+        account3.setType("储蓄");
+        account3.setCustomerName("土豪");
+        accountRepository.save(account3);
+    }
+
+    /*
     @Description : 幂等操作
      */
     @Test
     void testIdentityCheck(){
-        List<AccountResponse> responses1 = loanService.getAccounts("12345678");
+        //肯定不存在的账号
+        List<AccountResponse> responses1 = loanService.getAccounts("12345678abcdef");
         System.out.println(responses1.size());
         Assert.isTrue(responses1.size() == 0);
 
+        //信用评级为2的账号
         List<AccountResponse> responses2 = loanService.getAccounts("123456");
         Assert.isTrue(responses2.size() ==accountRepository.findByIdNumber("123456").size());
         Assert.isTrue(responses2.get(0).getCustomerName().equals("郭泰安") );
+        Assert.isTrue(responses2.get(0).getGrade() == 2);
+
+        //信用评级为1的账号
+        List<AccountResponse> responses3 = loanService.getAccounts("234567");
+        Assert.isTrue(responses3.size() ==accountRepository.findByIdNumber("234567").size());
+        Assert.isTrue(responses3.get(0).getCustomerName().equals("土豪") );
+        Assert.isTrue(responses3.get(0).getGrade() == 1);
+
+        //信用评级为3的账号
+        List<AccountResponse> responses4 = loanService.getAccounts("567890");
+        Assert.isTrue(responses4.size() ==accountRepository.findByIdNumber("567890").size());
+        Assert.isTrue(responses4.get(0).getCustomerName().equals("郭泰安") );
+        Assert.isTrue(responses4.get(0).getGrade() == 3);
     }
 
     @Test
