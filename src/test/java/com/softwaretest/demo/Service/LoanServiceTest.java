@@ -16,11 +16,8 @@ import com.softwaretest.demo.Repository.LoanRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-<<<<<<< HEAD
 import org.springframework.test.annotation.Rollback;
-=======
 import org.springframework.util.Assert;
->>>>>>> d78814030b85b0d29cb7edab04c515575c893c5c
 
 import java.sql.Timestamp;
 import java.util.LinkedList;
