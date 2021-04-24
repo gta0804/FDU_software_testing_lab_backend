@@ -12,10 +12,11 @@ import com.softwaretest.demo.Repository.AccountRepository;
 import com.softwaretest.demo.Repository.FlowRepository;
 import com.softwaretest.demo.Repository.InstallmentRepository;
 import com.softwaretest.demo.Repository.LoanRepository;
-import org.apache.shiro.util.Assert;
+//import org.apache.shiro.util.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.util.Assert;
 
 import java.sql.Timestamp;
 import java.util.LinkedList;

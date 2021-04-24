@@ -72,10 +72,7 @@ public class WMPService {
         List<WMP> shares = wmpRepository.findByAccountIdAndType(accountId, 3);
 
         for (WMP e : products) {
-            double rate = 0;
-            if (e.getTitle().contains("1")) rate = 0.01;
-            if (e.getTitle().contains("2")) rate = 0.02;
-            if (e.getTitle().contains("3")) rate = 0.03;
+            double rate = 0.01;
             Flow benefit = new Flow("理财产品流水 收入 " + e.getTitle(), accountId, e.getAmount() * rate, new Timestamp(System.currentTimeMillis()));
             flowRepository.save(benefit);
 
@@ -84,10 +81,7 @@ public class WMPService {
         }
 
         for (WMP e : funds) {
-            double rate = 0;
-            if (e.getTitle().contains("1")) rate = 0.01;
-            if (e.getTitle().contains("2")) rate = 0.02;
-            if (e.getTitle().contains("3")) rate = 0.03;
+            double rate = 0.01;
             Flow benefit = new Flow("理财产品流水 收入 " + e.getTitle(), accountId, e.getAmount() * rate, new Timestamp(System.currentTimeMillis()));
             flowRepository.save(benefit);
 
