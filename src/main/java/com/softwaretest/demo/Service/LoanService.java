@@ -74,35 +74,6 @@ public class LoanService {
         }
         return accountDetailsResponses;
     }
-  public Flow payFine(Long loanId, Double amount, boolean overload) {
-    Loan loan = loanRepository.findById(loanId).orElse(null);
-    if (loan == null) {
-      return null;
-    }
-    Account account = accountRepository.findById(loan.getAccountId()).orElse(null);
-    if (account == null) {
-      return null;
-    }
-    if (account.getBalance() < amount) {
-      return null;
-    }
-    List<Installment> installments = loan.getInstallments();
-    for (Installment installment : installments) {
-      if (isExpired(installment) && !installment.getFineHasPaid()) {
-        installment.setFineHasPaid(true);
-      }
-    }
-    double remainBalance = Double.parseDouble(String.format("%.2f", account.getBalance() - amount));
-    account.setBalance(remainBalance);
-    installmentRepository.saveAll(installments);
-    loan.setInstallments(installments);
-    loanRepository.save(loan);
-    accountRepository.save(account);
-
-    Flow flow = new Flow("罚金缴纳", account.getAccountId(), amount, new Timestamp(System.currentTimeMillis()));
-    flowRepository.save(flow);
-    return flow;
-  }
 
   public boolean payFine(Long loanId,Double amount){
         Loan loan = loanRepository.findById(loanId).orElse(null);
@@ -125,16 +96,13 @@ public class LoanService {
         loan.setInstallments(installments);
         loanRepository.save(loan);
         accountRepository.save(account);
-
         Flow flow = new Flow("贷款罚金缴纳",account.getAccountId(),amount,new Timestamp(System.currentTimeMillis()));
         flowRepository.save(flow);
         return true;
     }
-
     /*
     @Description : 获取罚金
      */
-
     public double getFine(Loan loan){
         double result = 0;
         List<Installment> installments = loan.getInstallments();
