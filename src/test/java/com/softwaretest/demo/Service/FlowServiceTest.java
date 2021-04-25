@@ -6,10 +6,7 @@ import com.softwaretest.demo.Domain.Account;
 import com.softwaretest.demo.Domain.Flow;
 import com.softwaretest.demo.Domain.Installment;
 import com.softwaretest.demo.Domain.Loan;
-import com.softwaretest.demo.Repository.AccountRepository;
-import com.softwaretest.demo.Repository.FlowRepository;
-import com.softwaretest.demo.Repository.InstallmentRepository;
-import com.softwaretest.demo.Repository.LoanRepository;
+import com.softwaretest.demo.Repository.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,11 +38,15 @@ public class FlowServiceTest {
     @Autowired
     private FlowService flowService;
 
+    @Autowired
+    private WMPRepository wmpRepository;
+
     @BeforeEach
     void delAll(){
-        accountRepository.deleteAll();
+        wmpRepository.deleteAll();
         loanRepository.deleteAll();
         installmentRepository.deleteAll();
+        accountRepository.deleteAll();
         flowRepository.deleteAll();
     }
 
