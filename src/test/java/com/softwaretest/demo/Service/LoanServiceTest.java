@@ -242,6 +242,10 @@ public class LoanServiceTest {
         Assert.isTrue(isPayFineSuccess1);
         loanService.payFine(loan1.getId(),responses2.get(0).getFine());
 
+        List<AccountDetailsResponse> responses = loanService.getLoans(accountId);
+        Assert.isTrue(responses.get(0).getFine() == 0.00);
+
+
         //测试贷款Id不存在
         loanService.payFine(234567898L,0.00);
         boolean isPayFineSuccess2 = loanService.payFine(234567898L,0.00);
@@ -270,6 +274,14 @@ public class LoanServiceTest {
         String repaymentResult1 = loanService.repay(accountId1,accountDetails1.get(0).getLoanId(),0,4200.00);
         Assert.isTrue(repaymentResult1.equals("success"));
 
+        //再次手动还款
+        String repaymentResult6 = loanService.repay(accountId1,accountDetails1.get(0).getLoanId(),0,4200.00);
+        Assert.isTrue(repaymentResult6.equals("success"));
+
+        List<AccountDetailsResponse> responses2 = loanService.getLoans(accountId1);
+        Assert.isTrue(responses2.get(0).getInstallments().size() == 2);
+
+
         //账户不存在
         String repaymentResult2 = loanService.repay(accountId1+1230601,accountDetails1.get(0).getLoanId(),0,4200.00);
         Assert.isTrue(repaymentResult2.equals("付款账号不存在"));
@@ -282,6 +294,8 @@ public class LoanServiceTest {
         String repaymentResult4 = loanService.repay(accountId1,accountDetails1.get(0).getLoanId(),-1,4200.00);
         Assert.isTrue(repaymentResult4.equals("分期索引非法"));
 
+        String repaymentResult7 = loanService.repay(accountId1,accountDetails1.get(0).getLoanId(),99,4200.00);
+        Assert.isTrue(repaymentResult7.equals("分期索引非法"));
         //测试余额不足的情况
         List<Account> accounts2 = accountRepository.findByIdNumber("567890");
         Long accountId2 = accounts2.get(0).getAccountId();

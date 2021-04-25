@@ -46,7 +46,7 @@ public class LoanService {
         return accountDetailsResponses; }
     public List<AccountDetailsResponse> getLoans(Long accountId){
         List<Loan> loans = loanRepository.findByAccountId(accountId);
-        if(loans == null ||loans.size() == 0){
+        if(loans.size() == 0){
                 return null;
         }
         List<AccountDetailsResponse> accountDetailsResponses = new LinkedList<>();
@@ -82,14 +82,19 @@ public class LoanService {
         accountRepository.save(account);
         Flow flow = new Flow("贷款罚金缴纳",account.getAccountId(),amount,new Timestamp(System.currentTimeMillis()));
         flowRepository.save(flow);
-        return true; }
-    public double getFine(Loan loan){ double result = 0;
+        return true;
+    }
+
+    public double getFine(Loan loan){
+        double result = 0;
         List<Installment> installments = loan.getInstallments();
         for(Installment installment: installments){
             if(isExpired(installment)&&!installment.getFineHasPaid()){
                 result +=Double.parseDouble(String.format("%.2f",installment.getAmountRemained()*0.05)) ; }
         }
-        return result; }
+        return result;
+    }
+
     public String repay(Long accountId,Long loanId,Integer index,Double amount){ Account account = accountRepository.findById(accountId).orElse(null);
         if(account == null){
             return "付款账号不存在"; }
@@ -114,9 +119,13 @@ public class LoanService {
         flowRepository.save(flow);
         return "success"; }
     public boolean isPaid(Installment installment){ return !(installment.getAmountRemained() < 0.01); }
-    public boolean isExpired(Installment installment){ Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+
+    public boolean isExpired(Installment installment){
+        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
         Timestamp expiredTime = installment.getDeadline();
-        return expiredTime.before(currentTime)&& isPaid(installment); }
+        return expiredTime.before(currentTime)&& isPaid(installment);
+    }
+
     public int getGrade(Account account){ Double balance = account.getBalance();
         List<Loan> loans = loanRepository.findByAccountId(account.getAccountId());
         for(Loan loan:loans){
