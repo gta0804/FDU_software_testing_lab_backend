@@ -27,6 +27,7 @@ public class WMPServiceTest {
 
     @Autowired
     private WMPRepository wmpRepository;
+    
 
     @BeforeEach
     void setUp() {
@@ -36,7 +37,7 @@ public class WMPServiceTest {
         installmentRepository.deleteAll();
         accountRepository.deleteAll();
 
-        LoanServiceTest loanServiceTest = new LoanServiceTest(accountRepository,loanRepository,installmentRepository,flowRepository);
+        LoanServiceTest loanServiceTest = new LoanServiceTest();
         loanServiceTest.insertAccountA();
         loanServiceTest.insertAccountB();
         loanServiceTest.insertAccountC();

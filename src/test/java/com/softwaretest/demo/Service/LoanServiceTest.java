@@ -42,11 +42,10 @@ public class LoanServiceTest {
     @Autowired
     private LoanService loanService;
 
-    public LoanServiceTest(AccountRepository accountRepository, LoanRepository loanRepository, InstallmentRepository installmentRepository, FlowRepository flowRepository) {
-        this.accountRepository = accountRepository;
-        this.loanRepository = loanRepository;
-        this.installmentRepository = installmentRepository;
-        this.flowRepository = flowRepository;
+
+    @Autowired
+    public LoanServiceTest(){
+
     }
 
 /*
@@ -228,8 +227,10 @@ public class LoanServiceTest {
         Assert.isTrue(loan1!=null);
         boolean isPayFineSuccess1 = loanService.payFine(loan1.getId(),responses2.get(0).getFine());
         Assert.isTrue(isPayFineSuccess1);
+        loanService.payFine(loan1.getId(),responses2.get(0).getFine());
 
         //测试贷款Id不存在
+        loanService.payFine(234567898L,0.00);
         boolean isPayFineSuccess2 = loanService.payFine(234567898L,0.00);
         Assert.isTrue(!isPayFineSuccess2);
 
