@@ -10,6 +10,7 @@ import com.softwaretest.demo.Repository.AccountRepository;
 import com.softwaretest.demo.Repository.FlowRepository;
 import com.softwaretest.demo.Repository.InstallmentRepository;
 import com.softwaretest.demo.Repository.LoanRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -39,6 +40,14 @@ public class FlowServiceTest {
 
     @Autowired
     private FlowService flowService;
+
+    @BeforeEach
+    void delAll(){
+        accountRepository.deleteAll();
+        loanRepository.deleteAll();
+        installmentRepository.deleteAll();
+        flowRepository.deleteAll();
+    }
 
     Long insertAccountA(){
         Account account1 = new Account();
