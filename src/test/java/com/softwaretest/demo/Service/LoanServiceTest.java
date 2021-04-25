@@ -17,7 +17,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
 import org.springframework.test.annotation.Rollback;
 import org.springframework.util.Assert;
 
@@ -29,16 +28,16 @@ import java.util.List;
 public class LoanServiceTest {
 
     @Autowired
-    private AccountRepository accountRepository;
+    AccountRepository accountRepository;
 
     @Autowired
-    private LoanRepository loanRepository;
+    LoanRepository loanRepository;
 
     @Autowired
-    private InstallmentRepository installmentRepository;
+    InstallmentRepository installmentRepository;
 
     @Autowired
-    private FlowRepository flowRepository;
+    FlowRepository flowRepository;
 
     @Autowired
     private LoanService loanService;
@@ -49,6 +48,7 @@ public class LoanServiceTest {
 
     }
 
+
     @BeforeEach
     void delAll(){
         accountRepository.deleteAll();
@@ -58,6 +58,10 @@ public class LoanServiceTest {
     }
 
 /*
+=======
+
+    /*
+>>>>>>> a49b2fa273a7a19e9970ec178498e71f4002b212
     @description: 用来插入测试数据，成功后需要注释掉，以防正式测试时测试失败
      */
 

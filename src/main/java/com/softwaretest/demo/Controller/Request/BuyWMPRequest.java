@@ -9,6 +9,16 @@ public class BuyWMPRequest {
     private String endDate;
     private int number;
 
+    public BuyWMPRequest(long accountId, String title, int type, double amount, String startDate, String endDate, int number) {
+        this.accountId = accountId;
+        this.title = title;
+        this.type = type;
+        this.amount = amount;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.number = number;
+    }
+
     public long getAccountId() {
         return accountId;
     }

@@ -99,8 +99,8 @@ public class WMPService {
         }
     }
 
-    public HashMap<String, List> allWMPs(Long accountId) {
-        HashMap<String, List> hashMap = new HashMap<>();
+    public HashMap<String, List<WMP>> allWMPs(Long accountId) {
+        HashMap<String, List<WMP>> hashMap = new HashMap<>();
         hashMap.put("products", wmpRepository.findByAccountIdAndType(accountId, 1));
         hashMap.put("funds", wmpRepository.findByAccountIdAndType(accountId, 2));
         hashMap.put("shares", wmpRepository.findByAccountIdAndType(accountId, 3));
