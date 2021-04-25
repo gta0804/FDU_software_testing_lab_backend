@@ -21,25 +21,15 @@ public class FlowService {
 
     public List<FlowResponse>  findByAccountIdOrderByAmount(Long accountId, String order){
         List<FlowResponse> flowResponses = new LinkedList<>();
-        List<Flow> flows = null;
-        if("asc".equals(order)){
-            flows = flowRepository.findByAccountIdOrderByAmountAsc(accountId);
-        }
-        else if("desc".equals(order)){
-            flows = flowRepository.findByAccountIdOrderByAmountDesc(accountId);
-        }
-        else{
-            flows = flowRepository.findByAccountId(accountId);
-        }
-        if(flows == null){
-            return null;
-        }
+        List<Flow> flows ;
+        if("asc".equals(order)){ flows = flowRepository.findByAccountIdOrderByAmountAsc(accountId); }
+        else if("desc".equals(order)){ flows = flowRepository.findByAccountIdOrderByAmountDesc(accountId); }
+        else{ flows = flowRepository.findByAccountId(accountId); }
         for(Flow flow:flows){
             flowResponses.add(new FlowResponse(flow.getType(),flow.getAccountId(),flow.getAmount(),flow.getDate().toString()));
         }
         return flowResponses;
     }
-
     public List<FlowResponse>  findByAccountIdOrderByDate(Long accountId, String order){
         List<FlowResponse> flowResponses = new LinkedList<>();
         List<Flow> flows = null;
@@ -84,8 +74,7 @@ public class FlowService {
         }
         else if("desc".equals(order)){
             flows = flowRepository.findAllOrderByAmountDesc();
-        }
-        else{
+        } else{
             flows = flowRepository.findAll();
         }
         for(Flow flow:flows){
@@ -93,7 +82,6 @@ public class FlowService {
         }
         return flowResponses;
     }
-
     public List<FlowResponse> findAll(){
         List<FlowResponse> flowResponses = new LinkedList<>();
         List<Flow> flows = flowRepository.findAll();
@@ -102,9 +90,4 @@ public class FlowService {
         }
         return flowResponses;
     }
-
-
-
-
-
 }

@@ -37,6 +37,7 @@ public class WMPServiceTest {
 
     @Autowired
     private WMPRepository wmpRepository;
+    
 
     @BeforeEach
     void setUp() {
