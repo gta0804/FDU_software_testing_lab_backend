@@ -1,16 +1,11 @@
 package com.softwaretest.demo.Service;
 
-import com.softwaretest.demo.Repository.AccountRepository;
-import com.softwaretest.demo.Repository.FlowRepository;
-import com.softwaretest.demo.Repository.InstallmentRepository;
-import com.softwaretest.demo.Repository.LoanRepository;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import com.softwaretest.demo.Repository.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.Assert.*;
 
 @SpringBootTest
 public class WMPServiceTest {
@@ -30,12 +25,21 @@ public class WMPServiceTest {
     @Autowired
     private FlowRepository flowRepository;
 
-    @Before
-    public void setUp() throws Exception {
-    }
+    @Autowired
+    private WMPRepository wmpRepository;
 
-    @After
-    public void tearDown() throws Exception {
+    @BeforeEach
+    void setUp() {
+        flowRepository.deleteAll();
+        wmpRepository.deleteAll();
+        loanRepository.deleteAll();
+        installmentRepository.deleteAll();
+        accountRepository.deleteAll();
+
+        LoanServiceTest loanServiceTest = new LoanServiceTest(accountRepository,loanRepository,installmentRepository,flowRepository);
+        loanServiceTest.insertAccountA();
+        loanServiceTest.insertAccountB();
+        loanServiceTest.insertAccountC();
     }
 
     @Test
