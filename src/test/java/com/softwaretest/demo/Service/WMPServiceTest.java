@@ -48,7 +48,11 @@ public class WMPServiceTest {
         accountRepository.deleteAll();
         flowRepository.deleteAll();
 
-        LoanServiceTest loanServiceTest = new LoanServiceTest(accountRepository, loanRepository, installmentRepository, flowRepository);
+        LoanServiceTest loanServiceTest = new LoanServiceTest();
+        loanServiceTest.accountRepository = accountRepository;
+        loanServiceTest.flowRepository = flowRepository;
+        loanServiceTest.installmentRepository = installmentRepository;
+        loanServiceTest.loanRepository = loanRepository;
         loanServiceTest.insertAccountA();
         loanServiceTest.insertAccountB();
         loanServiceTest.insertAccountC();

@@ -27,16 +27,16 @@ import java.util.List;
 public class LoanServiceTest {
 
     @Autowired
-    private AccountRepository accountRepository;
+    AccountRepository accountRepository;
 
     @Autowired
-    private LoanRepository loanRepository;
+    LoanRepository loanRepository;
 
     @Autowired
-    private InstallmentRepository installmentRepository;
+    InstallmentRepository installmentRepository;
 
     @Autowired
-    private FlowRepository flowRepository;
+    FlowRepository flowRepository;
 
     @Autowired
     private LoanService loanService;
@@ -47,12 +47,6 @@ public class LoanServiceTest {
 
     }
 
-    public LoanServiceTest(AccountRepository accountRepository, LoanRepository loanRepository, InstallmentRepository installmentRepository, FlowRepository flowRepository) {
-        this.accountRepository = accountRepository;
-        this.loanRepository = loanRepository;
-        this.installmentRepository = installmentRepository;
-        this.flowRepository = flowRepository;
-    }
 
     /*
     @description: 用来插入测试数据，成功后需要注释掉，以防正式测试时测试失败
