@@ -65,11 +65,19 @@ public class PayLoanAutoServiceTest {
             }
         }
         if ("".equals(toAddId)) return;
+        Loan loanWithoutAccount = new Loan();
+        loanWithoutAccount.setAccountId(Long.parseLong(toAddId));
+        loanWithoutAccount.setAmount(12000.00);
+        loanWithoutAccount.setInterestRate(0.05);
+        loanWithoutAccount.setStartDate(castStringToTimeStamp("2021-01-23 00:00:00"));
+        loanRepository.save(loanWithoutAccount);
+        payLoanAutoService.payLoanAutomatically();
+        loanRepository.delete(loanWithoutAccount);
         List<Account> accounts = new ArrayList<>();
         Account accountToAdd = new Account();
         accountToAdd.setIdNumber(toAddId);
         accountToAdd.setType("储蓄");
-        accountToAdd.setBalance(500000.00);
+        accountToAdd.setBalance(1.00);
         accountToAdd.setCustomerName("沈征宇");
         accountRepository.save(accountToAdd);
         accounts = accountRepository.findByIdNumber(toAddId);
@@ -79,16 +87,30 @@ public class PayLoanAutoServiceTest {
         loan.setAmount(12000.00);
         loan.setInterestRate(0.05);
         loan.setStartDate(castStringToTimeStamp("2021-01-23 00:00:00"));
+        payLoanAutoService.payLoanAutomatically();
+        List<Installment> installments = new LinkedList<>();
+        loan.setInstallments(installments);
+        loanRepository.save(loan);
+        payLoanAutoService.payLoanAutomatically();
         Installment installment0 = new Installment(4200.00, 4200.00, castStringToTimeStamp("2021-02-23 00:00:00"));
+        installmentRepository.save(installment0);
+        Long tmpId = installment0.getId();
+        installments.add(installment0);
+        loan.setInstallments(installments);
+        loanRepository.save(loan);
+        payLoanAutoService.payLoanAutomatically();
+        installmentRepository.save(installment0);
+        installments.clear();
+        loan.setInstallments(installments);
+        installment0.setId(tmpId);
         installmentRepository.save(installment0);
         Installment installment1 = new Installment(4200.00, 4200.00, castStringToTimeStamp("2021-03-23 00:00:00"));
         Installment installment2 = new Installment(4200.00, 4200.00, castStringToTimeStamp("2021-04-23 00:00:00"));
-        Installment installment3 = new Installment(4200.00, 4200.00, castStringToTimeStamp("2021-05-23 00:00:00"));
+        Installment installment3 = new Installment(4200.00, 4200.00, castStringToTimeStamp("2021-11-23 00:00:00"));
         installmentRepository.save(installment1);
         installmentRepository.save(installment2);
         installmentRepository.save(installment3);
 
-        List<Installment> installments = new LinkedList<>();
 
         installments.add(installment0);
         installments.add(installment1);
@@ -100,11 +122,34 @@ public class PayLoanAutoServiceTest {
         Flow flow = new Flow("贷款发放", account.getAccountId(), 12000.00, castStringToTimeStamp("2021-01-23 00:00:00"));
         flowRepository.save(flow);
 
-        for (Flow flowToShow : payLoanAutoService.payLoanAutomatically()) {
+        Set<Flow> flows = payLoanAutoService.payLoanAutomatically();
+        System.out.println("补充额度前：");
+        for (Flow flowToShow : flows ) {
             System.out.println(flowToShow);
         }
-
+        accountToAdd.setBalance((double) 700);
+        System.out.println("补充额度后1：");
+        accountRepository.save(accountToAdd);
+        flows = payLoanAutoService.payLoanAutomatically();
+        for (Flow flowToShow : flows ) {
+            System.out.println(flowToShow);
+        }
+        accountToAdd.setBalance(accountToAdd.getBalance()+700);
+        System.out.println("补充额度后1：");
+        accountRepository.save(accountToAdd);
+        flows = payLoanAutoService.payLoanAutomatically();
+        for (Flow flowToShow : flows ) {
+            System.out.println(flowToShow);
+        }
+        accountToAdd.setBalance(500000.00);
+        System.out.println("补充额度后2：");
+        accountRepository.save(accountToAdd);
+        flows = payLoanAutoService.payLoanAutomatically();
+        for (Flow flowToShow : flows ) {
+            System.out.println(flowToShow);
+        }
         Assert.isNull(payLoanAutoService.payFine((long) 1,null,true));
+        payLoanAutoService.payLoanAutomatically();
         for (int i = 0; i < 10000; i++) {
             Long loanIdDoesNotExist = (long) (Math.random() * 9000000 + 1000000);
             if (null == loanRepository.findById(loanIdDoesNotExist).orElse(null)){
@@ -118,8 +163,31 @@ public class PayLoanAutoServiceTest {
             break;
         }
 
-
-
+        Installment installment10 = new Installment(4200.00, 0.00, castStringToTimeStamp("2021-02-23 00:00:00"));
+        installmentRepository.save(installment10);
+        Loan loan10 = new Loan();
+        List<Installment> installments10 = new ArrayList<>();
+        installments10.add(installment10);
+        loan10.setInstallments(installments10);
+        loan10.setAccountId(accountToAdd.getAccountId());
+        loan10.setAmount(4000.00);
+        loan10.setInterestRate(0.05);
+        loan10.setStartDate(castStringToTimeStamp("2021-01-23 00:00:00"));
+        loanRepository.save(loan10);
+        payLoanAutoService.payLoanAutomatically();
+        Installment installment20 = new Installment(4200.00, 4200.00, castStringToTimeStamp("2021-02-23 00:00:00"));
+        installment20.setFineHasPaid(true);
+        installmentRepository.save(installment20);
+        Loan loan20 = new Loan();
+        List<Installment> installments20 = new ArrayList<>();
+        installments20.add(installment20);
+        loan20.setInstallments(installments20);
+        loan20.setAccountId(accountToAdd.getAccountId());
+        loan20.setAmount(4000.00);
+        loan20.setInterestRate(0.05);
+        loan20.setStartDate(castStringToTimeStamp("2021-01-23 00:00:00"));
+        loanRepository.save(loan20);
+        payLoanAutoService.payFine(loan20.getId(),1.00,true);
     }
 
     @Test
@@ -282,7 +350,7 @@ public class PayLoanAutoServiceTest {
         installments.add(installment0);
         loan.setInstallments(installments);
         loanRepository.save(loan);
-        Assert.isTrue(!payLoanAutoService.payBill(installment0,account));
+        payLoanAutoService.payBill(installment0,account);
     }
 
 }

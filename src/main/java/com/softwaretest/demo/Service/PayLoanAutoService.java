@@ -51,14 +51,13 @@ public class PayLoanAutoService {
       }
       for (Long installmentID : installmentIDs) {
         Installment installment = installmentRepository.findById(installmentID).orElse(null);
-        if (null == installment) continue ;
         //分期过期且没还钱
-        if (isExpired(installment) && !isPaid(installment)){
+        if (isExpired(installment)){
           double fine = getFine(loan);
           //没有交罚款
-          if (fine > 0){
-            if (account.getBalance() >= fine){
-              Flow tmpflow = payFine(loan.getId(),fine,true);
+          if (fine > 0 && account.getBalance() >= fine){
+            Flow tmpflow = payFine(loan.getId(),fine,true);
+            if (null != tmpflow){
               flows.add(tmpflow);
               flowRepository.save(tmpflow);
             }else{
@@ -67,15 +66,11 @@ public class PayLoanAutoService {
           }
           double amountRemained = installment.getAmountRemained();
           if (account.getBalance() >= amountRemained){
-            if(payBill(installment,account)){
               Flow flow = new Flow("贷款还款",account.getAccountId(),amountRemained,new Timestamp(System.currentTimeMillis()));
               flows.add(flow);
               flowRepository.save(flow);
-            }
-
+              payBill(installment,account);
           }
-        }else{
-          continue;
         }
       }
 
@@ -84,15 +79,11 @@ public class PayLoanAutoService {
   }
 
   @Transactional
-  public boolean payBill(Installment installment,Account account){
-    if (account.getBalance() >= installment.getAmountRemained()){
+  public void payBill(Installment installment,Account account){
       account.setBalance(account.getBalance()-installment.getAmountRemained());
       installment.setAmountRemained(0.0);
       accountRepository.save(account);
       installmentRepository.save(installment);
-      return true;
-    }
-    return false;
   }
 
 
@@ -101,11 +92,8 @@ public class PayLoanAutoService {
   public Flow payFine(Long loanId, Double amount, boolean overload) {
     Loan loan = loanRepository.findById(loanId).orElse(null);
     if (null == loan) {
-      System.out.println(this.getClass().getName() +"中的方法走进了");
       return null;
     }
-    System.out.println(this.getClass().getName() +"中的方法没走进");
-
     Account account = accountRepository.findById(loan.getAccountId()).orElse(null);
     if (null == account) {
       return null;
@@ -115,7 +103,8 @@ public class PayLoanAutoService {
     }
     List<Installment> installments = loan.getInstallments();
     for (Installment installment : installments) {
-      if (isExpired(installment) && !installment.getFineHasPaid()) {
+      if (isExpired(installment)) {
+        if (installment.getFineHasPaid()) continue;
         installment.setFineHasPaid(true);
       }
     }
